@@ -1,4 +1,4 @@
-# CMU 794 group project
+# CMU 18794 group project
 ## installation
 This repo is tested on Python 3.6.10, PyTorch 1.5.0
 
