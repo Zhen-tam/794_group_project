@@ -63,55 +63,7 @@ Or you can simply input all the path, an example is followed:
 ```
 python just_run.py   --model_type bert   --model_name_or_path bert-base-cased   --task_name MRPC   --do_eval   --do_lower_case   --data_dir /home/baipiao_tz/nlp/glue_data/MRPC/   --max_seq_length 128   --per_gpu_train_batch_size 32   --learning_rate 2e-5   --num_train_epochs 3.0   --output_dir /home/baipiao_tz/nlp/mrpc_output/    --paraphrase_corpus --input_file /home/baipiao_tz/nlp/prepared_data/paraphrase_1_1000.tsv   --overwrite_output_dir   --input_sentence  none
 ```
-### Evaluation and Result
-The benchmark result (8 threads at most, with 4 CPU, no GPU, number of entries per example after TF-IDF, M, is 10, number of positive example, N, is 1000) is as following:
-| Number of negtive example per entries (K) | recall | tfidf-recall | tfidf-time(s) | total time(s) | total time per example(s) |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :------------- |
-| 10  | 0.9869327390599676  | --- | --- | 633 | 0.063 |
-| 50  | 0.9855668036483913  | 1 | 36 | 687 | 0.01374 |
-| 100 | 0.9836247852016577| 1 | 73 | 719 | 0.00719 |
-| 500 | 0.9738319631040706 | 1 | 441 | 1089 | 0.002178 |
-| 1000 | 0.9667797286512371 | 1 | 1046 | 1700 | 0.0017 |
 
-The detailed time consumption analysis for the case when N=1 & k=1000, is as following:
-| Total time: 13.3806973916s | step | time (s) |
-| :-------------: | :------------- | :------------- | 
-| Before eval: 12.5592698079s | Step 1: setting up modes  | 4.777940511703491 |
-|   | Step 2: load model  | 3.539000413981012 |
-|   | Step 3: remove cache for last testing| 0.021132707595825195 |
-|   | Step 4: Corpus Tokenization | 2.3765177726745605 |
-|   | Step 5: Tfidf for Corpus S1.1 S.(k-1).1 | 1.8446784019470215 |
-| Eval: 0.82142758369s | Step 6: Tokenize S1.2 and Tfidf for S1.2 | 0.0018427371978759766 |
-|   | Step 7: compute cosine distance between S1.2 and Corpus | 0.06635570526123047 |
-|   | Step 8. Find Argmax 10 | 0.0003757476806640625 |
-|   | Step 9: Run BERT on 10 with batch_size=8 | 0.75285339355 |
-
-## Try the interaction paraphrasing function
-First, you need to prepare a corpus file, `corpus.txt`, with all the sentences you want to find paraphrases from. And each line in that corpus file contains only one whole sentence. There is a prepared corpus, which contains 1000 sentences randomly chosen from MRPC.
-
-Here are the instructions for testing:
-
-In terminal one:
-```linux
-cd http_part
-export TASK_NAME=MPRC
-export GLUE_DIR=/path/to/glue_data
-export TARGET_FILE=/target/filename/of/candidate/corpus
-export OUTPUT_DIR=/path/to/mrpc_output
-
-python run_glue_server.py   --model_type bert   --model_name_or_path bert-base-cased   --task_name $TASK_NAME   --do_eval   --do_lower_case   --data_dir $GLUE_DIR/$TASK_NAME   --max_seq_length 128   --per_gpu_train_batch_size 32   --learning_rate 2e-5   --num_train_epochs 3.0   --output_dir $OUTPUT_DIR   --paraphrase_corpus --input_file $TARGET_FILE   --overwrite_output_dir   --input_sentence  none  --interaction  [--portnum 5000]
-```
-Note that it require some time for model initialization. So please wait until the logs in server terminal doesn't change before next steps.
-
-In terminal two:
-```
-cd http_part
-python http_client.py [--portnum 5000]
-```
-Then, in the client terminal, when it displays "Target sentence: ", you can type in the target sentence you want to find paraphrases of. If you want to finish, you can type `&&Stop` as the "Target sentence" and it will quit in the client terminal. 
-
-Once the inputmsentence provided, you will get potential target paraphrases in your corpus.
-The first round query should take a little more time than others afterwards, since it will has to deal with tokenization and cache.
 
 ## References
 <a id="1">[1]</a> 
