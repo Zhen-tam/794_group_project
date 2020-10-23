@@ -1,4 +1,4 @@
-# cmu_nlp_spring2020
+# CMU 794 group project
 ## installation
 This repo is tested on Python 3.6.10, PyTorch 1.5.0
 
@@ -28,19 +28,19 @@ After the transformers have been installed, you can install this project by clon
 
 ```linux
 cd ..
-git clone https://github.com/mpandeydev/cmu_nlp_spring2020
+git clone https://github.com/Zhen-tam/794_group_project.git
 ```
 Then, you need to replace the processors folder in transformers with the folder with same name in this project,
 Importantly, you need to replace the processors folder in the installed transformers directory like this (path are different according to the environment you create in the previous steps, but are simliar. Or you can use `pip list -v` to find where the transformers package is installed):
 
 ```linux
 sudo rm -r /usr/local/lib/python3.6/dist-packages/transformers/data/processors
-sudo mv ./cmu_nlp_spring2020/processors/ /usr/local/lib/python3.6/dist-packages/transformers/data/
+sudo mv ./794_group_project/processors/ /usr/local/lib/python3.6/dist-packages/transformers/data/
 ```
 Likewise, you need to replace the metrics folder in transformers with the folder with same name in this project:
 ```linux
 sudo rm -r /usr/local/lib/python3.6/dist-packages/transformers/data/metrics
-sudo mv ./cmu_nlp_spring2020/metrics/ /usr/local/lib/python3.6/dist-packages/transformers/data/
+sudo mv ./794_group_project/metrics/ /usr/local/lib/python3.6/dist-packages/transformers/data/
 ```
 Then, you need to download the [pre-trained model](https://drive.google.com/drive/folders/1dVrZht7Z9sPAzw31cM4dts_FCHq-Bo7u?usp=sharing), named `mrpc_output`, and save it to some directory `$OUTPUT_DIR`.
 
