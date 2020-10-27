@@ -42,6 +42,11 @@ Likewise, you need to replace the metrics folder in transformers with the folder
 sudo rm -r /usr/local/lib/python3.6/dist-packages/transformers/data/metrics
 sudo mv ./794_group_project/metrics/ /usr/local/lib/python3.6/dist-packages/transformers/data/
 ```
+Also, you need to replace the BERT config file in transformers with the file with same name in this project:
+```linux
+sudo rm -r /usr/local/lib/python3.6/dist-packages/transformers/configuration_bert.py
+sudo mv ./794_group_project/configuration_bert.py /usr/local/lib/python3.6/dist-packages/transformers/
+```
 Then, you need to download the [pre-trained model](https://drive.google.com/drive/folders/1dVrZht7Z9sPAzw31cM4dts_FCHq-Bo7u?usp=sharing), named `mrpc_output`, and save it to some directory `$OUTPUT_DIR`.
 
 Last, you need to download the [GLUE data](https://gluebenchmark.com/tasks) by running the script, `download_glue_data.py`, and unpack it to some directory `$GLUE_DIR`.
@@ -57,11 +62,11 @@ export PREPARED_DATA=/path/to/prepared_data
 export TARGET_FILE=/target/filename/in/prepared_data
 export OUTPUT_DIR=/path/to/mrpc_output
 
-python just_run.py   --model_type bert   --model_name_or_path bert-base-cased   --task_name $TASK_NAME   --do_eval   --do_lower_case   --data_dir $GLUE_DIR/$TASK_NAME   --max_seq_length 128   --per_gpu_train_batch_size 32   --learning_rate 2e-5   --num_train_epochs 3.0   --output_dir $OUTPUT_DIR   --paraphrase_corpus --input_file $PREPARED_DATA/$TARGET_FILE   --overwrite_output_dir   --input_sentence  none
+python just_run.py   --model_type bert   --model_name_or_path $OUTPUT_DIR   --task_name $TASK_NAME   --do_eval   --do_lower_case   --data_dir $GLUE_DIR/$TASK_NAME   --max_seq_length 128   --output_dir $OUTPUT_DIR   --paraphrase_corpus --input_file $PREPARED_DATA/$TARGET_FILE   --overwrite_output_dir   --input_sentence  none
 ```
 Or you can simply input all the path, an example is followed:
 ```
-python just_run.py   --model_type bert   --model_name_or_path bert-base-cased   --task_name MRPC   --do_eval   --do_lower_case   --data_dir /home/baipiao_tz/nlp/glue_data/MRPC/   --max_seq_length 128   --per_gpu_train_batch_size 32   --learning_rate 2e-5   --num_train_epochs 3.0   --output_dir /home/baipiao_tz/nlp/mrpc_output/    --paraphrase_corpus --input_file /home/baipiao_tz/nlp/prepared_data/paraphrase_1_1000.tsv   --overwrite_output_dir   --input_sentence  none
+python just_run.py   --model_type bert   --model_name_or_path  $OUTPUT_DIR   --task_name MRPC   --do_eval   --do_lower_case   --data_dir /home/baipiao_tz/nlp/glue_data/MRPC/   --max_seq_length 128   --output_dir /home/baipiao_tz/nlp/mrpc_output/    --paraphrase_corpus --input_file /home/baipiao_tz/nlp/prepared_data/paraphrase_1_1000.tsv   --overwrite_output_dir   --input_sentence  none
 ```
 ### Evaluation and Result
 The benchmark result (8 threads at most, with 4 CPU, no GPU, number of entries per example after TF-IDF, M, is 10, number of positive example, N, is 1000) is as following:
